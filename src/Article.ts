@@ -8,11 +8,13 @@ export default class Article implements IArticle {
 	type: string;
 	headline: string;
 	source: string;
+	domain: string;
 
-	constructor(subreddit: string, headline: string, source: string) {
+	constructor(subreddit: string, headline: string, source: string, domain: string) {
 		this.type = subreddit;
 		this.headline = headline;
 		this.source = source;
+		this.domain = domain;
 	}
 
 	prettyName() {

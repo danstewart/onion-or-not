@@ -43,7 +43,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-	article: Article = new Article('', '', '');
+	article: Article = new Article('', '', '', '');
 	articles: Articles = new Articles();
 
 	score: [number, number] = [0, 0];

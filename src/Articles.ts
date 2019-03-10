@@ -25,7 +25,15 @@ export default class Articles implements IArticles {
 
 	constructor() {
 		this.counts = { theonion: 0, nottheonion: 0 };
-		this.lastSeen = { theonion: '', nottheonion: '' };
+
+		// Get seen posts from localStorage
+		let seen = localStorage.getItem('lastSeenPosts');
+		if (seen != null) {
+			this.lastSeen = JSON.parse(seen);
+		} else {
+			this.lastSeen = { theonion: '', nottheonion: '' };
+		}
+
 		this.articles = [];
 	}
 
@@ -39,16 +47,22 @@ export default class Articles implements IArticles {
 	getArticle() {
 		let needsShuffle: boolean = false;
 
-		// Check if we 		// this.article = new Article('theonion', 'Headline', '');need to refill our list of articles
+		// Check if we need to refill our list of articles
 		Object.keys(this.counts).forEach(async subreddit => {
 			if (this.counts[subreddit] <= 5) {
-				await this.fetchArticles(subreddit);
 				needsShuffle = true;
+				await this.fetchArticles(subreddit);
 			}
 		});
 
 		// Reshuffle if we've added to our list
-		if (needsShuffle) this.shuffle();
+		if (needsShuffle) {
+			// TODO: Should find a better way to store seen posts
+			// The current method can at worst hide 19 posts since you could answer the last post first
+			// then leave the page, the next page load will fetch posts after that last post
+			localStorage.setItem('lastSeenPosts', JSON.stringify(this.lastSeen));
+			this.shuffle();
+		}
 
 		// Our list is shuffled so we can just return the last item
 		let article = this.articles.pop()!;
@@ -72,9 +86,10 @@ export default class Articles implements IArticles {
 			let json = await response.json();
 
 			json.data.children.forEach((child: any) => {
-				let article = new Article(subreddit, child.data.title, child.data.url);
+				let article = new Article(subreddit, child.data.title, child.data.url, child.data.domain);
 				this.articles.push(article);
-				this.lastSeen[subreddit] = child.name;
+
+				this.lastSeen[subreddit] = child.data.name;
 				this.counts[subreddit]++;
 			});
 		} catch (err) {
