@@ -1,29 +1,99 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+	<div id='app'>
+		<!-- Hero -->
+		<section class='hero is-primary is-bold is-medium'>
+			<div class='hero-body'>
+				<div class='container'>
+					<h1 class='title is-1'>The Onion or not?</h1>
+				</div>
+			</div>
+		</section>
+
+		<!-- Score -->
+		<div class='score'>
+			<p class='subtitle is-4'>SCORE: {{ score[0] }} / {{ score[1] }}</p>
+		</div>
+
+		<!-- Article -->
+		<section class='section'>
+			<div class='headline'>
+				<h3 class='title is-3'>{{ article.headline }}</h3>
+			</div>
+		</section>
+		
+		<!-- Controls -->
+		<section class='section'>
+			<p class='subtitle'>Was it...<a @click='choice("theonion")'>The Onion</a> or <a @click='choice("nottheonion")'>not The Onion</a></p>
+		</section>
+
+		<!-- Result -->
+		<section class='section' v-if='showResult'>
+			<p class='subtitle is-3'>{{ correct ? "Correct" : "Wrong" }} it was <b>{{ article.prettyName() }}</b></p>
+			<p class='subtitle is-6'><a :href='article.source'>Read the story</a></p>
+			<button class='button' @click='next()'>Next</button>
+		</section>
+	</div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
+import Article from './Article';
+import Articles from './Articles';
+import 'bulma/css/bulma.css';
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
 
-@Component({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+@Component
+export default class App extends Vue {
+	article: Article = new Article('', '', '');
+	articles: Articles = new Articles();
+
+	score: [number, number] = [0, 0];
+	showResult: boolean = false;
+	correct: boolean = false;
+
+	constructor() {
+		super();
+	}
+
+	async created() {
+		// Load articles
+		await this.articles.init();
+
+		// Get an article
+		this.article = this.articles.getArticle();
+	}
+
+	choice(option: string) {
+		this.showResult = true;
+		this.correct = option === this.article.type;
+
+		if (this.correct) this.score[0]++;
+		this.score[1]++;
+	}
+
+	next() {
+		this.showResult = false;
+		this.article = this.articles.getArticle();
+	}
+}
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
+}
+
+.hero {
+	margin-bottom: 40px;
+}
+
+.score {
+	display: flex;
+	justify-content: flex-end;
+	margin-right: 15px;
 }
 </style>
+0
