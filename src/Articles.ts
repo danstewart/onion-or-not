@@ -73,15 +73,12 @@ export default class Articles implements IArticles {
 	// Fetches a bunch of posts from /r/theonion and /r/nottheonion
 	async fetchArticles(subreddit: string) {
 		let limit: number = 10;
+		let url: string = `/reddit/${subreddit}?limit=${limit}`;
+
+		// Get posts after the last one we got back
+		if (this.lastSeen[subreddit]) url = `${url};after=${this.lastSeen[subreddit]}`;
 
 		try {
-			let url: string = `https://api.reddit.com/r/${subreddit}/hot.json?limit=${limit}`;
-
-			// Get posts after the last one we got back
-			if (this.lastSeen[subreddit]) {
-				url = `${url};after=${this.lastSeen[subreddit]}`;
-			}
-
 			let response = await fetch(url);
 			let json = await response.json();
 
