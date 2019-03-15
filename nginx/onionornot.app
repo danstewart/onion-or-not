@@ -4,17 +4,17 @@ server {
 
     server_name onionornot.app www.onionornot.app;
 
-        root /var/www/onionornot.app;
-        index index.html;
+    root /var/www/onionornot.app;
+    index index.html;
 
     location / {
-                try_files $uri $uri/ =404;
+        try_files $uri $uri/ =404;
     }
 
-        location ~ ^/reddit/(\w+)$ {
-                resolver 8.8.8.8;
+    location ~ ^/reddit/(\w+)$ {
+        resolver 8.8.8.8;
         proxy_pass https://www.reddit.com/r/$1/hot/.json$is_args$args;
-        }
+    }
 
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 
