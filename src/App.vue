@@ -63,6 +63,9 @@ export default class App extends Vue {
 	}
 
 	choice(option: string) {
+		// If we've just picked a result then don't allow changing the answer
+		if (this.showResult) return;
+
 		this.showResult = true;
 		this.correct = option === this.article.type;
 

@@ -78,6 +78,11 @@ export default class Articles implements IArticles {
 		// Get posts after the last one we got back
 		if (this.lastSeen[subreddit]) url = `${url};after=${this.lastSeen[subreddit]}`;
 
+		// If we're on localhost then send our request to the live site
+		if (window.location.hostname === 'localhost') {
+			url = `https://onionornot.app${url}`;
+		}
+
 		try {
 			let response = await fetch(url);
 			let json = await response.json();
