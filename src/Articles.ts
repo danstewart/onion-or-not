@@ -15,6 +15,7 @@ interface ICount {
 interface ISeen {
 	theonion: string;
 	nottheonion: string;
+	date: string;
 	[key: string]: string;
 }
 
@@ -27,11 +28,15 @@ export default class Articles implements IArticles {
 		this.counts = { theonion: 0, nottheonion: 0 };
 
 		// Get seen posts from localStorage
+		let today     = new Date().toISOString().substring(0,10);
+		this.lastSeen = { date: today, theonion: '', nottheonion: '' };
+
 		let seen = localStorage.getItem('lastSeenPosts');
 		if (seen != null) {
-			this.lastSeen = JSON.parse(seen);
-		} else {
-			this.lastSeen = { theonion: '', nottheonion: '' };
+			let parsed = JSON.parse(seen);
+			if (this.lastSeen.date < today) {
+				this.lastSeen = parsed;
+			}
 		}
 
 		this.articles = [];
@@ -72,7 +77,7 @@ export default class Articles implements IArticles {
 
 	// Fetches a bunch of posts from /r/theonion and /r/nottheonion
 	async fetchArticles(subreddit: string) {
-		let limit: number = 10;
+		const limit: number = 10
 		let url: string = `/reddit/${subreddit}?limit=${limit}`;
 
 		// Get posts after the last one we got back
@@ -95,7 +100,7 @@ export default class Articles implements IArticles {
 				this.counts[subreddit]++;
 			});
 		} catch (err) {
-			console.log(`[ERR] Failed to fetch reddit posts: ${err}`);
+			console.log(`[ERR] Failed to fetch reddit posts from ${url}: ${err}`);
 		}
 	}
 
