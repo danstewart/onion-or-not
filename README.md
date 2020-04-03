@@ -2,7 +2,10 @@
 
 ## Project setup
 ```
-# Install dpes
+# Bootstrap
+[[ -f /bootstrapped ]] || bash <(curl -s https://raw.githubusercontent.com/danstewart/server-bootstrap/master/bootstrap.sh)
+
+# Install deps
 dnf install npm
 npm install
 
@@ -19,6 +22,12 @@ systemctl restart nginx
 
 # Certbot
 sudo certbot --nginx
+```
+
+### Deploy
+```
+# Updates the dist/ dir which is already symlinked to the web root
+npm run build
 ```
 
 ### Development mode
