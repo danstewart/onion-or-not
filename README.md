@@ -6,19 +6,19 @@
 [[ -f /bootstrapped ]] || bash <(curl -s https://raw.githubusercontent.com/danstewart/server-bootstrap/master/bootstrap.sh)
 
 # Install deps
-dnf install npm
+sudo dnf install npm
 npm install
 
 # Build
 npm run build
 
 # Link
-ln -s $(pwd)/dist/ /data/www/onionornot.app
+sudo ln -s $(pwd)/dist/ /data/www/onionornot.app
 
 # nginx
-cp nginx/onionornot.app /etc/nginx/sites-available/
-ln -s /etc/nginx/sites-available/onionornot.app /etc/nginx/sites-enabled/
-systemctl restart nginx
+sudo cp nginx/onionornot.app /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/onionornot.app /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
 
 # Certbot
 sudo certbot --nginx
