@@ -5,14 +5,10 @@
 			<div class='hero-body'>
 				<div class='container'>
 					<h1 class='title is-1'>The Onion or not?</h1>
+					<p class='is-family-monospace is-size-5'>SCORE: {{ score[0] }}/{{ score[1] }}</p>
 				</div>
 			</div>
 		</section>
-
-		<!-- Score -->
-		<div class='score'>
-			<p class='subtitle is-4'>SCORE: {{ score[0] }} / {{ score[1] }}</p>
-		</div>
 
 		<!-- Article -->
 		<section class='section'>
@@ -31,6 +27,11 @@
 			<p class='subtitle is-3'>{{ correct ? "Correct" : "Wrong" }} it was <b>{{ article.prettyName() }}</b></p>
 			<p class='subtitle is-6'><a :href='article.source'>Read the story</a></p>
 			<button class='button' @click='next()'>Next</button>
+		</section>
+
+		<!-- Empty space -->
+		<!-- So when picking an answer the page doesn't jump up on mobile -->
+		<section style='margin-top: 200px' class='section' v-if='!showResult'>
 		</section>
 	</div>
 </template>
@@ -92,11 +93,4 @@ export default class App extends Vue {
 .hero {
 	margin-bottom: 40px;
 }
-
-.score {
-	display: flex;
-	justify-content: flex-end;
-	margin-right: 15px;
-}
 </style>
-0

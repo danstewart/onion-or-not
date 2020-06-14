@@ -84,7 +84,7 @@ export default class Articles implements IArticles {
 		if (this.lastSeen[subreddit]) url = `${url};after=${this.lastSeen[subreddit]}`;
 
 		// If we're on localhost then send our request to the live site
-		if (window.location.hostname === 'localhost') {
+		if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
 			url = `https://onionornot.app${url}`;
 		}
 

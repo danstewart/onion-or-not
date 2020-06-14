@@ -9,6 +9,9 @@
 sudo dnf install npm
 npm install
 
+# Test mode
+npm run serve
+
 # Build
 npm run build
 
